@@ -6,7 +6,7 @@ let hours = date.getHours();
 let day = date.getDay();
 
 if (hours > 8 && hours <= 12) console.log('Доброе утро');
-if (hours > 12 && hours <= 18) console.log('Доброе день');
+if (hours > 12 && hours <= 18) console.log('Добрый день');
 if (hours > 18 && hours <= 24) console.log('Добрый вечер');
 if (hours > 0 && hours <= 8) console.log('Доброй ночи');
 console.log(`Сегодня: ${daysWeek[day]}`);
