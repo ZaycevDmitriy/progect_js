@@ -32,10 +32,9 @@ window.addEventListener('DOMContentLoaded', () => {
         clearInterval(idSetInterval);
       }
 
-      timer.hours < 10 ? timerHours.textContent = `0${timer.hours}` : timerHours.textContent = timer.hours;
-      timer.minutes < 10 ? timerMinutes.textContent = `0${timer.minutes}` : timerMinutes.textContent = timer.minutes;
-      timer.seconds < 10 ? timerSeconds.textContent = `0${timer.seconds}` : timerSeconds.textContent = timer.seconds;
-      // console.log(timer.timeRemaining);
+      timerHours.textContent = timer.hours < 10 ? `0${timer.hours}` : timer.hours;
+      timerMinutes.textContent = timer.minutes < 10 ? `0${timer.minutes}` : timer.minutes;
+      timerSeconds.textContent = timer.seconds < 10 ? `0${timer.seconds}` : timer.seconds;
     }
 
     const idSetInterval = setInterval(updateClock, 1000);
