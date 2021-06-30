@@ -85,7 +85,7 @@ window.addEventListener('DOMContentLoaded', () => {
       popupInterval = requestAnimationFrame(animationPopUp);
 
       counter += 1;
-      if (counter < 39) {
+      if (counter < 50) {
         popupContent.style.left = `${counter}%`;
       } else {
         cancelAnimationFrame(popupInterval);
