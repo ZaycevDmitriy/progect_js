@@ -42,31 +42,29 @@ window.addEventListener('DOMContentLoaded', () => {
     const idSetInterval = setInterval(updateClock, 1000);
   }
 
-  countTimer('18:40 27 June 2021');
+  countTimer('18:40 1 July 2021');
 
   // Меню
 
   const toggleMenu = () => {
-    const btnMenu = document.querySelector('.menu'),
-      menu = document.querySelector('menu'),
-      closeBtn = document.querySelector('.close-btn'),
-      menuItems = menu.querySelectorAll('ul>li');
+    const body = document.querySelector('body'),
+      menu = document.querySelector('menu');
 
     const handlerMenu = () => {
-      // if (!menu.style.transform || menu.style.transform === `translate(-100%)`) {
-      //   menu.style.transform = `translate(0)`;
-      // } else {
-      //   menu.style.transform = `translate(-100%)`;
-      // }
-
       menu.classList.toggle('active-menu');
     };
 
-    btnMenu.addEventListener('click', handlerMenu);
+    body.addEventListener('click', (event) => {
+      let target = event.target;
+      let targetClosLi = target.closest('menu>ul>li');
+      let targetBtnMenu = target.closest('.menu');
 
-    closeBtn.addEventListener('click', handlerMenu);
+      if (targetBtnMenu) handlerMenu();
 
-    menuItems.forEach((item) => item.addEventListener('click', handlerMenu));
+      if (targetClosLi || target.classList.contains('close-btn')) {
+        handlerMenu();
+      }
+    });
   };
 
   toggleMenu();
@@ -76,7 +74,6 @@ window.addEventListener('DOMContentLoaded', () => {
   const togglePopUp = () => {
     const popup = document.querySelector('.popup'),
       popupBtn = document.querySelectorAll('.popup-btn'),
-      popupClose = document.querySelector('.popup-close'),
       popupContent = document.querySelector('.popup-content');
     let popupInterval;
     let counter = -50;
@@ -106,10 +103,56 @@ window.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    popupClose.addEventListener('click', () => {
-      popup.style.display = 'none';
-    });
+    popup.addEventListener('click', (event) => {
+      let target = event.target;
+
+      if (target.classList.contains('popup-close')) {
+        popup.style.display = 'none';
+      } else {
+        target = target.closest('.popup-content');
+
+        if (!target) {
+          popup.style.display = 'none';
+        }
+      }
+    })
   };
 
   togglePopUp();
+
+  // Табы
+
+  const tabs = () => {
+    const tabHeader = document.querySelector('.service-header'),
+      tab = tabHeader.querySelectorAll('.service-header-tab'),
+      tabContent = document.querySelectorAll('.service-tab');
+
+    const toggleTabContent = (index) => {
+      for (let i = 0; i < tabContent.length; i++) {
+        if (index === i) {
+          tab[i].classList.add('active');
+          tabContent[i].classList.remove('d-none');
+        } else {
+          tab[i].classList.remove('active');
+          tabContent[i].classList.add('d-none');
+        }
+      }
+    };
+
+    tabHeader.addEventListener('click', (event) => {
+      let target = event.target;
+
+      target = target.closest('.service-header-tab');
+
+      if (target) {
+        tab.forEach((item, i) => {
+          if (item === target) {
+            toggleTabContent(i);
+          }
+        });
+      }
+    });
+  };
+
+  tabs();
 });
