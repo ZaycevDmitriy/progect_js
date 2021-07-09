@@ -1,4 +1,4 @@
-window.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
   'use strict';
 
   // Таймер
@@ -26,9 +26,9 @@ window.addEventListener('DOMContentLoaded', () => {
         minutes,
         seconds,
       };
-    }
+    };
 
-    const updateClock = () => {
+    const idSetInterval = setInterval(() => {
       let timer = getTimeRemaining();
       if (timer.timeRemaining <= 0) {
         clearInterval(idSetInterval);
@@ -37,12 +37,10 @@ window.addEventListener('DOMContentLoaded', () => {
       timerHours.textContent = timer.hours < 10 ? `0${timer.hours}` : timer.hours;
       timerMinutes.textContent = timer.minutes < 10 ? `0${timer.minutes}` : timer.minutes;
       timerSeconds.textContent = timer.seconds < 10 ? `0${timer.seconds}` : timer.seconds;
-    }
+    }, 1000);
+  };
 
-    const idSetInterval = setInterval(updateClock, 1000);
-  }
-
-  countTimer('18:40 1 July 2021');
+  countTimer('18:40 5 July 2021');
 
   // Меню
 
@@ -119,7 +117,7 @@ window.addEventListener('DOMContentLoaded', () => {
           popup.style.display = 'none';
         }
       }
-    })
+    });
   };
 
   togglePopUp();
