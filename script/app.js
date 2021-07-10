@@ -261,7 +261,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
   slider();
   
+    // validation
 
+  const validateCalculated = () => {
+    const calcElems = document.querySelectorAll('.calc-item');
 
+    calcElems.forEach((input) => {
+      input.addEventListener('input', () => {
+        input.value = input.value.replace(/\D/g, '');
+      });
+    });
+  };
+
+  validateCalculated();
+
+  const validateFeedbackForm = () => {
+    const inputName = document.getElementById('form2-name'),
+      inputMessage = document.getElementById('form2-message');
+    
+    inputName.addEventListener('input', () => {
+      inputName.value = inputName.value.replace(/[^а-я\-\s]/gi, '');
+    });
+  };
+
+  validateFeedbackForm();
 
 });
