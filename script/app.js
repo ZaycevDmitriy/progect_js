@@ -298,8 +298,7 @@ document.addEventListener('DOMContentLoaded', () => {
   validateCalculated();
 
   const validateFeedbackForm = () => {
-    const inputName2 = document.getElementById('form2-name'),
-      inputName1 = document.getElementById('form1-name'),
+    const inputsName = document.querySelectorAll('.form-name'),
       inputMessage = document.getElementById('form2-message'),
       inputsEmail = document.querySelectorAll('.form-email'),
       inputsPhone = document.querySelectorAll('.form-phone');
@@ -314,15 +313,13 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    inputName2.addEventListener('input', () => {
-      validateInputText(inputName2);
-      firsLetterToUpperCase(inputName2);
+    inputsName.forEach((input) => {
+      input.addEventListener('input', () => {
+        validateInputText(input);
+        firsLetterToUpperCase(input);
+      });
     });
-
-    inputName1.addEventListener('input', () => {
-      validateInputText(inputName1);
-      firsLetterToUpperCase(inputName1);
-    });
+    
 
     inputMessage.addEventListener('input', () => {
       validateInputText(inputMessage);
