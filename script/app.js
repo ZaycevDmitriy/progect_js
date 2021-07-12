@@ -279,17 +279,30 @@ document.addEventListener('DOMContentLoaded', () => {
   validateCalculated();
 
   const validateFeedbackForm = () => {
-    const inputName = document.getElementById('form2-name'),
+    const inputName2 = document.getElementById('form2-name'),
+      inputName1 = document.getElementById('form1-name'),
       inputMessage = document.getElementById('form2-message'),
-      inputEmail = document.getElementById('form2-email'),
-      inputPhone = document.getElementById('form2-phone');
+      inputsEmail = document.querySelectorAll('.form-email'),
+      inputsPhone = document.querySelectorAll('.form-phone');
 
     const validateInputText = (input) => {
-      input.value = input.value.replace(/[^а-я\-\s]/gi, '');
+      input.value = input.value.replace(/[^а-я\-\s\n]/gim, '');
     };
 
-    inputName.addEventListener('input', () => {
-      validateInputText(inputName);
+    const firsLetterToUpperCase = (input) => {
+      input.value = input.value.replace(/^[а-я]/gi, (match) => {
+        return match.toUpperCase();
+      });
+    }
+
+    inputName2.addEventListener('input', () => {
+      validateInputText(inputName2);
+      firsLetterToUpperCase(inputName2);
+    });
+
+    inputName1.addEventListener('input', () => {
+      validateInputText(inputName1);
+      firsLetterToUpperCase(inputName1);
     });
 
     inputMessage.addEventListener('input', () => {
@@ -297,37 +310,40 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const validateEmail = () => {
-      inputEmail.addEventListener('input', () => {
-        inputEmail.value = inputEmail.value.replace(/[^\w@\-'~_!*.]/gi, '');
-      });
+      inputsEmail.forEach((input) => {
+        input.addEventListener('input', () => {
+          input.value = input.value.replace(/[^\w@\-'~_!*.]/gi, '');
+        });
 
-      inputEmail.addEventListener('blur', () => {
-        inputEmail.value = inputEmail.value.trim();
-        const correctEmail = inputEmail.value.match(/(\w+(?:[._\-~!*']?\w+)*)@*(\w+(?:[._\-~!*']*\w+)*)\.(\w{2,})/i);
-        console.log(correctEmail);
-        if (correctEmail) {
-          inputEmail.value = `${correctEmail[1]}@${correctEmail[2]}.${correctEmail[3]}`;
-        } else {
-          inputEmail.value = '';
-        }
+        input.addEventListener('blur', () => {
+          input.value = input.value.trim();
+          const correctEmail = input.value.match(/(\w+(?:[._\-~!*']?\w+)*)@*(\w+(?:[._\-~!*']*\w+)*)\.(\w{2,})/i);
+          if (correctEmail) {
+            input.value = `${correctEmail[1]}@${correctEmail[2]}.${correctEmail[3]}`;
+          } else {
+            input.value = '';
+          }
+        });
       });
     };
 
     validateEmail();
 
     const validatePhone = () => {
-      inputPhone.addEventListener('input', () => {
-        inputPhone.value = inputPhone.value.replace(/[^+\-()\d]/g, '')
-      });
+      inputsPhone.forEach((input) => {
+        input.addEventListener('input', () => {
+          input.value = input.value.replace(/[^+\-()\d]/g, '')
+        });
 
-      inputPhone.addEventListener('blur', () => {
-        inputPhone.value = inputPhone.value.trim();
-        const correctPhone = inputPhone.value.match(/(\+?)([78])(-?\(?)*(\d{3})(\)?-?)([-])*(\d{3})([-])*(\d{2})([-])*(\d{2})/);
-        if (correctPhone) {
-          inputPhone.value = `${correctPhone[1]}${correctPhone[2]}(${correctPhone[4]})-${correctPhone[7]}-${correctPhone[9]}-${correctPhone[11]}`;
-        } else {
-          inputPhone.value = '';
-        }
+        input.addEventListener('blur', () => {
+          input.value = input.value.trim();
+          const correctPhone = input.value.match(/(\+?)([78])(-?\(?)*(\d{3})(\)?-?)([-])*(\d{3})([-])*(\d{2})([-])*(\d{2})/);
+          if (correctPhone) {
+            input.value = `${correctPhone[1]}${correctPhone[2]}(${correctPhone[4]})-${correctPhone[7]}-${correctPhone[9]}-${correctPhone[11]}`;
+          } else {
+            input.value = '';
+          }
+        });
       });
     };
 
