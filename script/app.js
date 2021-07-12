@@ -264,12 +264,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // validation
 
   const validateCalculated = () => {
-    const calcElems = document.querySelectorAll('.calc-item');
+    const calcElems = document.querySelectorAll('.calc-item'),
+      calcSelect = document.querySelector('.calc-type');
 
     calcElems.forEach((input) => {
-      input.addEventListener('input', () => {
+      if (input !== calcSelect) {
+        input.addEventListener('input', () => {
         input.value = input.value.replace(/\D/g, '');
       });
+      }      
     });
   };
 
