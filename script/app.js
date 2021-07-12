@@ -260,7 +260,26 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   slider();
-  
+
+  //change images on hover
+
+  const changeImage = () => {
+    const commandPhotos = document.querySelectorAll('.command__photo');    
+    commandPhotos.forEach((photo) => {
+      let tempSrcPhoto;
+      photo.addEventListener('mouseenter', () => {
+        tempSrcPhoto = photo.src;
+        photo.src = photo.dataset.img;
+      });
+
+      photo.addEventListener('mouseleave', () => {
+        photo.src = tempSrcPhoto;
+      });
+    });
+  };
+
+  changeImage();
+
     // validation
 
   const validateCalculated = () => {
@@ -277,11 +296,60 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const validateFeedbackForm = () => {
     const inputName = document.getElementById('form2-name'),
-      inputMessage = document.getElementById('form2-message');
-    
+      inputMessage = document.getElementById('form2-message'),
+      inputEmail = document.getElementById('form2-email'),
+      inputPhone = document.getElementById('form2-phone');
+
+    const validateInputText = (input) => {
+      input.value = input.value.replace(/[^а-я\-\s]/gi, '');
+    };
+
     inputName.addEventListener('input', () => {
-      inputName.value = inputName.value.replace(/[^а-я\-\s]/gi, '');
+      validateInputText(inputName);
     });
+
+    inputMessage.addEventListener('input', () => {
+      validateInputText(inputMessage);
+    });
+
+    const validateEmail = () => {
+      inputEmail.addEventListener('input', () => {
+        inputEmail.value = inputEmail.value.replace(/[^\w@\-'~_!*.]/gi, '');
+      });
+
+      inputEmail.addEventListener('blur', () => {
+        inputEmail.value = inputEmail.value.trim();
+        const correctEmail = inputEmail.value.match(/(\w+(?:[._\-~!*']?\w+)*)@*(\w+(?:[._\-~!*']*\w+)*)\.(\w{2,})/i);
+        console.log(correctEmail);
+        if (correctEmail) {
+          inputEmail.value = `${correctEmail[1]}@${correctEmail[2]}.${correctEmail[3]}`;
+        } else {
+          inputEmail.value = '';
+        }
+      });
+    };
+
+    validateEmail();
+
+    const validatePhone = () => {
+      inputPhone.addEventListener('input', () => {
+        inputPhone.value = inputPhone.value.replace(/[^+\-()\d]/g, '')
+      });
+
+      inputPhone.addEventListener('blur', () => {
+        inputPhone.value = inputPhone.value.trim();
+        const correctPhone = inputPhone.value.match(/(\+?)([78])(-?\(?)*(\d{3})(\)?-?)([-])*(\d{3})([-])*(\d{2})([-])*(\d{2})/);
+        if (correctPhone) {
+          inputPhone.value = `${correctPhone[1]}${correctPhone[2]}(${correctPhone[4]})-${correctPhone[7]}-${correctPhone[9]}-${correctPhone[11]}`;
+        } else {
+          inputPhone.value = '';
+        }
+        console.log(correctPhone);
+      });
+    };
+
+    validatePhone();
+
   };
 
   validateFeedbackForm();
