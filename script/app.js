@@ -1,4 +1,4 @@
-window.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
   'use strict';
 
   // Таймер
@@ -26,9 +26,9 @@ window.addEventListener('DOMContentLoaded', () => {
         minutes,
         seconds,
       };
-    }
+    };
 
-    const updateClock = () => {
+    const idSetInterval = setInterval(() => {
       let timer = getTimeRemaining();
       if (timer.timeRemaining <= 0) {
         clearInterval(idSetInterval);
@@ -37,31 +37,36 @@ window.addEventListener('DOMContentLoaded', () => {
       timerHours.textContent = timer.hours < 10 ? `0${timer.hours}` : timer.hours;
       timerMinutes.textContent = timer.minutes < 10 ? `0${timer.minutes}` : timer.minutes;
       timerSeconds.textContent = timer.seconds < 10 ? `0${timer.seconds}` : timer.seconds;
-    }
+    }, 1000);
+  };
 
-    const idSetInterval = setInterval(updateClock, 1000);
-  }
-
-  countTimer('18:40 1 July 2021');
+  countTimer('18:40 5 July 2021');
 
   // Меню
 
   const toggleMenu = () => {
     const btnMenu = document.querySelector('.menu'),
       menu = document.querySelector('menu');
-
-    const handlerMenu = () => {
-      menu.classList.toggle('active-menu');
-    };
-
-    btnMenu.addEventListener('click', handlerMenu);
-
-    menu.addEventListener('click', (event) => {
+    
+    const closeMenu = (event) => {
       const target = event.target;
       const targetCloseLi = target.closest('menu>ul>li');
 
       if (targetCloseLi || target.classList.contains('close-btn')) handlerMenu();
-    });
+      if(!target.closest('menu') && !target.closest('.menu')) handlerMenu();
+    }
+
+    const handlerMenu = () => {
+      menu.classList.toggle('active-menu');
+      if (menu.classList.contains('active-menu')) {
+        document.body.addEventListener('click', closeMenu);
+      } else {
+        document.body.removeEventListener('click', closeMenu);
+      }
+    };
+
+    btnMenu.addEventListener('click', handlerMenu);
+
   };
 
   toggleMenu();
@@ -112,7 +117,7 @@ window.addEventListener('DOMContentLoaded', () => {
           popup.style.display = 'none';
         }
       }
-    })
+    });
   };
 
   togglePopUp();
@@ -152,4 +157,206 @@ window.addEventListener('DOMContentLoaded', () => {
   };
 
   tabs();
+
+  // slider
+
+
+  const slider = () => {
+    const createDot = () => {
+      let dot = document.createElement('li');
+      dot.classList.add('dot');
+      return dot;
+    };
+
+    const slide = document.querySelectorAll('.portfolio-item'),
+      btn = document.querySelectorAll('.portfolio-btn'),
+      slider = document.querySelector('.portfolio-content');
+    
+    let currentSlide = 0;
+    let interval;
+
+    const addDotList = () => {
+      const elemList = document.querySelector('.portfolio-dots');      
+      for (let i = 0; i < slide.length; i++) {
+        const li = createDot();
+        if (i === 0) li.classList.add('dot-active');
+        elemList.append(li);
+      }
+    };
+
+    addDotList();
+
+    const dot = document.querySelectorAll('.dot');
+
+    const prevSlide = (elem, index, strClass) => {
+      elem[index].classList.remove(strClass);
+    };
+
+    const nextSlide = (elem, index, strClass) => {
+      elem[index].classList.add(strClass);
+    };
+
+    const autoPlaySlide = () => {
+      prevSlide(slide, currentSlide, 'portfolio-item-active');
+      prevSlide(dot, currentSlide, 'dot-active');
+      currentSlide++;
+      if (currentSlide >= slide.length) currentSlide = 0;
+      nextSlide(slide, currentSlide, 'portfolio-item-active');
+      nextSlide(dot, currentSlide, 'dot-active');
+    };
+
+    const startSlide = (time = 3000) => {
+      interval = setInterval(autoPlaySlide, time);
+    };
+    
+    const stopSlide = () => {
+      clearInterval(interval);
+    };
+
+    slider.addEventListener('click', (event) => {
+      event.preventDefault();
+
+      let target = event.target;
+
+      if (!target.matches('.portfolio-btn, .dot')) {
+        return;
+      }
+
+      prevSlide(slide, currentSlide, 'portfolio-item-active');
+      prevSlide(dot, currentSlide, 'dot-active');
+
+      if (target.matches('#arrow-right')) {
+        currentSlide++;
+      } else if (target.matches('#arrow-left')) {
+        currentSlide--;
+      } else if (target.matches('.dot')) {
+        dot.forEach((elem, index) => {
+          if (elem === target) {
+            currentSlide = index;
+          }
+        });
+      }
+
+      if (currentSlide >= slide.length) currentSlide = 0;
+      if (currentSlide < 0) currentSlide = slide.length - 1;
+
+      nextSlide(slide, currentSlide, 'portfolio-item-active');
+      nextSlide(dot, currentSlide, 'dot-active');
+    });
+
+    startSlide(1500);
+
+    slider.addEventListener('mouseover', (event) => {
+      if (event.target.matches('.portfolio-btn') || event.target.matches('.dot')) {
+        stopSlide();
+      }
+    });
+
+    slider.addEventListener('mouseout', (event) => {
+      if (event.target.matches('.portfolio-btn') || event.target.matches('.dot')) {
+        startSlide(1500);
+      }
+    });
+  };
+
+  slider();
+
+  //change images on hover
+
+  const changeImage = () => {
+    const commandPhotos = document.querySelectorAll('.command__photo');    
+    commandPhotos.forEach((photo) => {
+      let tempSrcPhoto;
+      photo.addEventListener('mouseenter', () => {
+        tempSrcPhoto = photo.src;
+        photo.src = photo.dataset.img;
+      });
+
+      photo.addEventListener('mouseleave', () => {
+        photo.src = tempSrcPhoto;
+      });
+    });
+  };
+
+  changeImage();
+  
+    // validation
+
+  const validateCalculated = () => {
+    const calcElems = document.querySelectorAll('.calc-item');
+
+    calcElems.forEach((input) => {
+      if (!input.classList.contains('calc-type')) {
+        input.addEventListener('input', () => {
+        input.value = input.value.replace(/\D/g, '');
+      });
+      }      
+    });
+  };
+
+  validateCalculated();
+
+  const validateFeedbackForm = () => {
+    const forms = document.querySelectorAll('[name="user_form"]');
+
+    const validateInputText = (input) => {
+      input.value = input.value.replace(/[^а-я\-\s\n]/gim, '');
+    };
+
+    const firsLetterToUpperCase = (input) => {
+      input.value = input.value.replace(/^[а-я]/gi, (match) => {
+        return match.toUpperCase();
+      });
+    };
+
+    forms.forEach((form) => {
+      form.addEventListener('input', (event) => {
+        const target = event.target;
+
+        if (target.name === 'user_name') {
+          validateInputText(target);
+          firsLetterToUpperCase(target);
+        };
+
+        if (target.name === 'user_email') {
+          target.value = target.value.replace(/[^\w@\-'~_!*.]/gi, '');
+        }
+
+        if (target.name === 'user_phone') {
+          target.value = target.value.replace(/[^+\-()\d]/g, '');
+        }
+
+        if (target.name === 'user_message') {
+          validateInputText(target);
+        }
+      });
+
+      form.addEventListener('blur', (event) => {
+        const target = event.target;
+
+        if (target.name === 'user_email') {
+          target.value = target.value.trim();
+          const correctEmail = target.value.match(/(\w+(?:[._\-~!*']?\w+)*)@*(\w+(?:[._\-~!*']*\w+)*)\.(\w{2,})/i);
+          if (correctEmail) {
+            target.value = `${correctEmail[1]}@${correctEmail[2]}.${correctEmail[3]}`;
+          } else {
+            target.value = '';
+          }
+        }
+
+        if (target.name === 'user_phone') {
+          target.value = target.value.trim();
+          const correctPhone = target.value.match(/(\+?)([78])(-?\(?)*(\d{3})(\)?-?)([-])*(\d{3})([-])*(\d{2})([-])*(\d{2})/);
+          if (correctPhone) {
+            target.value = `${correctPhone[1]}${correctPhone[2]}(${correctPhone[4]})-${correctPhone[7]}-${correctPhone[9]}-${correctPhone[11]}`;
+          } else {
+            target.value = '';
+          }
+        }
+      }, true);
+    });
+  };
+
+  validateFeedbackForm();
+
 });
