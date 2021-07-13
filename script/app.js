@@ -47,13 +47,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const toggleMenu = () => {
     const btnMenu = document.querySelector('.menu'),
       menu = document.querySelector('menu');
-    
+
     const closeMenu = (event) => {
       const target = event.target;
       const targetCloseLi = target.closest('menu>ul>li');
 
       if (targetCloseLi || target.classList.contains('close-btn')) handlerMenu();
-      if(!target.closest('menu') && !target.closest('.menu')) handlerMenu();
+      if (!target.closest('menu') && !target.closest('.menu')) handlerMenu();
     }
 
     const handlerMenu = () => {
@@ -171,12 +171,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const slide = document.querySelectorAll('.portfolio-item'),
       btn = document.querySelectorAll('.portfolio-btn'),
       slider = document.querySelector('.portfolio-content');
-    
+
     let currentSlide = 0;
     let interval;
 
     const addDotList = () => {
-      const elemList = document.querySelector('.portfolio-dots');      
+      const elemList = document.querySelector('.portfolio-dots');
       for (let i = 0; i < slide.length; i++) {
         const li = createDot();
         if (i === 0) li.classList.add('dot-active');
@@ -208,7 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const startSlide = (time = 3000) => {
       interval = setInterval(autoPlaySlide, time);
     };
-    
+
     const stopSlide = () => {
       clearInterval(interval);
     };
@@ -264,7 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
   //change images on hover
 
   const changeImage = () => {
-    const commandPhotos = document.querySelectorAll('.command__photo');    
+    const commandPhotos = document.querySelectorAll('.command__photo');
     commandPhotos.forEach((photo) => {
       let tempSrcPhoto;
       photo.addEventListener('mouseenter', () => {
@@ -279,22 +279,74 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   changeImage();
-  
-    // validation
 
-  const validateCalculated = () => {
-    const calcElems = document.querySelectorAll('.calc-item');
+  // validation Calculated
+
+  const validateCalculated = (price = 100) => {
+    const calcElems = document.querySelectorAll('.calc-item'),
+      calcBlock = document.querySelector('.calc-block'),
+      calcType = document.querySelector('.calc-type'),
+      calcSquare = document.querySelector('.calc-square'),
+      calcCount = document.querySelector('.calc-count'),
+      calcDay = document.querySelector('.calc-day'),
+      calcTotal = document.getElementById('total');
 
     calcElems.forEach((input) => {
       if (!input.classList.contains('calc-type')) {
         input.addEventListener('input', () => {
-        input.value = input.value.replace(/\D/g, '');
-      });
-      }      
+          input.value = input.value.replace(/\D/g, '');
+        });
+      }
+    });
+
+    const animateCount = (total) => {
+      let count = 0;
+
+      console.log(total);
+      const timerId = setInterval(() => {
+        if (total >= count) {
+          calcTotal.textContent = count++;
+        } else {
+          clearInterval(timerId);
+        }
+      }, 1);
+    };
+
+    const countSum = () => {
+      let total = 0,
+        countValue = 1,
+        dayValue = 1;
+      const typeValue = calcType.options[calcType.selectedIndex].value,
+        squareValue = +calcSquare.value;
+
+      if (calcCount.value > 1) {
+        countValue += (calcCount.value - 1) / 10;
+      }
+
+      if (calcDay.value && calcDay.value < 5) {
+        dayValue *= 2;
+      } else if (calcDay.value && calcDay.value < 10) {
+        dayValue *= 1.5;
+      }
+
+      if (typeValue && squareValue) {
+        total = Math.round(price * typeValue * squareValue * countValue * dayValue);
+      }
+
+      calcTotal.textContent = total;
+      // animateCount(total);
+    };
+
+    calcBlock.addEventListener('change', (event) => {
+      const target = event.target;
+
+      if (target.matches('select') || target.matches('input')) countSum();
     });
   };
 
   validateCalculated();
+
+  // validation forms
 
   const validateFeedbackForm = () => {
     const forms = document.querySelectorAll('[name="user_form"]');
