@@ -283,11 +283,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // validation
 
   const validateCalculated = () => {
-    const calcElems = document.querySelectorAll('.calc-item'),
-      calcSelect = document.querySelector('.calc-type');
+    const calcElems = document.querySelectorAll('.calc-item');
 
     calcElems.forEach((input) => {
-      if (input !== calcSelect) {
+      if (!input.classList.contains('calc-type')) {
         input.addEventListener('input', () => {
         input.value = input.value.replace(/\D/g, '');
       });
@@ -298,10 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
   validateCalculated();
 
   const validateFeedbackForm = () => {
-    const inputsName = document.querySelectorAll('.form-name'),
-      inputMessage = document.getElementById('form2-message'),
-      inputsEmail = document.querySelectorAll('.form-email'),
-      inputsPhone = document.querySelectorAll('.form-phone');
+    const forms = document.querySelectorAll('[name="user_form"]');
 
     const validateInputText = (input) => {
       input.value = input.value.replace(/[^а-я\-\s\n]/gim, '');
@@ -311,60 +307,54 @@ document.addEventListener('DOMContentLoaded', () => {
       input.value = input.value.replace(/^[а-я]/gi, (match) => {
         return match.toUpperCase();
       });
-    }
+    };
 
-    inputsName.forEach((input) => {
-      input.addEventListener('input', () => {
-        validateInputText(input);
-        firsLetterToUpperCase(input);
+    forms.forEach((form) => {
+      form.addEventListener('input', (event) => {
+        const target = event.target;
+
+        if (target.name === 'user_name') {
+          validateInputText(target);
+          firsLetterToUpperCase(target);
+        };
+
+        if (target.name === 'user_email') {
+          target.value = target.value.replace(/[^\w@\-'~_!*.]/gi, '');
+        }
+
+        if (target.name === 'user_phone') {
+          target.value = target.value.replace(/[^+\-()\d]/g, '');
+        }
+
+        if (target.name === 'user_message') {
+          validateInputText(target);
+        }
       });
-    });
-    
 
-    inputMessage.addEventListener('input', () => {
-      validateInputText(inputMessage);
-    });
+      form.addEventListener('blur', (event) => {
+        const target = event.target;
 
-    const validateEmail = () => {
-      inputsEmail.forEach((input) => {
-        input.addEventListener('input', () => {
-          input.value = input.value.replace(/[^\w@\-'~_!*.]/gi, '');
-        });
-
-        input.addEventListener('blur', () => {
-          input.value = input.value.trim();
-          const correctEmail = input.value.match(/(\w+(?:[._\-~!*']?\w+)*)@*(\w+(?:[._\-~!*']*\w+)*)\.(\w{2,})/i);
+        if (target.name === 'user_email') {
+          target.value = target.value.trim();
+          const correctEmail = target.value.match(/(\w+(?:[._\-~!*']?\w+)*)@*(\w+(?:[._\-~!*']*\w+)*)\.(\w{2,})/i);
           if (correctEmail) {
-            input.value = `${correctEmail[1]}@${correctEmail[2]}.${correctEmail[3]}`;
+            target.value = `${correctEmail[1]}@${correctEmail[2]}.${correctEmail[3]}`;
           } else {
-            input.value = '';
+            target.value = '';
           }
-        });
-      });
-    };
+        }
 
-    validateEmail();
-
-    const validatePhone = () => {
-      inputsPhone.forEach((input) => {
-        input.addEventListener('input', () => {
-          input.value = input.value.replace(/[^+\-()\d]/g, '')
-        });
-
-        input.addEventListener('blur', () => {
-          input.value = input.value.trim();
-          const correctPhone = input.value.match(/(\+?)([78])(-?\(?)*(\d{3})(\)?-?)([-])*(\d{3})([-])*(\d{2})([-])*(\d{2})/);
+        if (target.name === 'user_phone') {
+          target.value = target.value.trim();
+          const correctPhone = target.value.match(/(\+?)([78])(-?\(?)*(\d{3})(\)?-?)([-])*(\d{3})([-])*(\d{2})([-])*(\d{2})/);
           if (correctPhone) {
-            input.value = `${correctPhone[1]}${correctPhone[2]}(${correctPhone[4]})-${correctPhone[7]}-${correctPhone[9]}-${correctPhone[11]}`;
+            target.value = `${correctPhone[1]}${correctPhone[2]}(${correctPhone[4]})-${correctPhone[7]}-${correctPhone[9]}-${correctPhone[11]}`;
           } else {
-            input.value = '';
+            target.value = '';
           }
-        });
-      });
-    };
-
-    validatePhone();
-
+        }
+      }, true);
+    });
   };
 
   validateFeedbackForm();
