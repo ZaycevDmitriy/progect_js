@@ -340,7 +340,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // calcTotal.textContent = total;
       if (total > 0) animateCount(total);
-      
     };
 
     calcBlock.addEventListener('change', (event) => {
