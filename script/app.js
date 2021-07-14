@@ -300,16 +300,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const animateCount = (total) => {
+      let timerId;
+      clearInterval(timerId);
       let count = 0;
+      const speed = 200;
+      const inc = total / speed;
 
-      console.log(total);
-      const timerId = setInterval(() => {
-        if (total >= count) {
-          calcTotal.textContent = count++;
+      timerId = setInterval(() => {
+        if (total > count) {
+          count = count + inc;
+          calcTotal.textContent = count;
         } else {
           clearInterval(timerId);
+          count = 0;
         }
-      }, 1);
+      }, 5);
     };
 
     const countSum = () => {
@@ -333,8 +338,9 @@ document.addEventListener('DOMContentLoaded', () => {
         total = Math.round(price * typeValue * squareValue * countValue * dayValue);
       }
 
-      calcTotal.textContent = total;
-      // animateCount(total);
+      // calcTotal.textContent = total;
+      if (total > 0) animateCount(total);
+      
     };
 
     calcBlock.addEventListener('change', (event) => {
