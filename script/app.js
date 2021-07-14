@@ -309,7 +309,7 @@ document.addEventListener('DOMContentLoaded', () => {
       timerId = setInterval(() => {
         if (total > count) {
           count = count + inc;
-          calcTotal.textContent = count;
+          calcTotal.textContent = Math.round(count);
         } else {
           clearInterval(timerId);
           count = 0;

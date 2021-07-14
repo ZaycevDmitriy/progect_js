@@ -411,6 +411,16 @@
 		</div>
 	</div>
 </div>
+<script src="plugins/validator/validator.js"></script>
 
+<script>
+	const valid = new Validator({
+		selector: '[name="user_form"]',
+		pattern: {},
+		method: {},
+	});
+
+	valid.init();
+</script>
 </body>
 </html>
