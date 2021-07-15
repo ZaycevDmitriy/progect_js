@@ -357,7 +357,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const forms = document.querySelectorAll('[name="user_form"]');
 
     const validateInputText = (input) => {
-      input.value = input.value.replace(/[^а-я\-\s\n]/gim, '');
+      input.value = input.value.replace(/[^а-яё\-\s\n]/gim, '');
     };
 
     const firsLetterToUpperCase = (input) => {
@@ -414,6 +414,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
-  validateFeedbackForm();
+  // validateFeedbackForm();
 
 });

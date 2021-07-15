@@ -71,13 +71,13 @@
 		<div class="main-form-input container">
 			<div class="row">
 				<div class="col-12 col-lg-4">
-					<input type="text" class="form-name" id="form1-name" name="user_name" placeholder="Ваше имя" required>
+					<input type="text" class="form-name" id="form1-name" name="user_name" placeholder="Ваше имя"  data-input="name" required>
 				</div>
 				<div class="col-12 col-lg-4">
-					<input type="email" class="form-email" id="form1-email" name="user_email" placeholder="E-mail">
+					<input type="email" class="form-email" id="form1-email" name="user_email" placeholder="E-mail" data-input="email">
 				</div>
 				<div class="col-12 col-lg-4">
-					<input type="tel" class="form-phone" id="form1-phone" name="user_phone" placeholder="Номер телефона" required>
+					<input type="tel" class="form-phone" id="form1-phone" name="user_phone" placeholder="Номер телефона"   data-input="phone" required>
 				</div>
 			</div>
 		</div>
@@ -302,19 +302,19 @@
 						<div class="row">
 							<div class="col-md-4 col-md-offset-0 col-sm-12 col-sm-offset-0">
 								<input class="top-form form-name" id="form2-name" type="text" name="user_name"
-											 placeholder="Ваше имя" required>
+											 placeholder="Ваше имя" data-input="name" >
 							</div>
 							<div class="col-md-4 col-md-offset-0 col-sm-12 col-sm-offset-0">
 								<input class="top-form form-email" id="form2-email" type="email" name="user_email"
-											 placeholder="E-mail">
+											 placeholder="E-mail" data-input="email">
 							</div>
 							<div class="col-md-4 col-md-offset-0 col-sm-12 col-sm-offset-0">
 								<input class="top-form form-phone" id="form2-phone" type="tel" name="user_phone"
-											 placeholder="Номер телефона" required>
+											 placeholder="Номер телефона"  data-input="phone" >
 							</div>
 							<div class="col-md-12 col-sm-12 col-12">
 								<textarea class="mess" id="form2-message" name="user_message"
-											 placeholder="Ваше сообщение"></textarea>
+											 placeholder="Ваше сообщение" data-input="message"></textarea>
 							</div>
 						</div>
 					</div>
@@ -396,15 +396,15 @@
 			<form id="form3" name="user_form">
 				<div>
 					<input type="text" class="form-name" id="form3-name" name="user_name" placeholder="Ваше имя"
-								 required>
+								 required data-input="name">
 				</div>
 				<div>
 					<input type="tel" class="form-phone" id="form3-phone" name="user_phone"
-								 placeholder="Ваш номер телефона" required>
+								 placeholder="Ваш номер телефона" required data-input="phone">
 				</div>
 				<div>
 					<input type="email" class="form-email" id="form3-email" name="user_email"
-								 placeholder="Ваш E-mail">
+								 placeholder="Ваш E-mail" data-input="email">
 				</div>
 				<button class="btn form-btn" type="submit">Оставить заявку!</button>
 			</form>
@@ -416,8 +416,30 @@
 <script>
 	const valid = new Validator({
 		selector: '[name="user_form"]',
-		pattern: {},
-		method: {},
+		pattern: {
+			phone: /^\+380\d{7}$/,
+			zip: /\d{5,6}/,
+			name: /[а-яё\-\s\n]/gim,
+			message: /[а-яё\-\s\n]/gim,
+		},
+		method: {
+			'phone': [
+				['notEmpty'],
+				['pattern', 'phone']
+			],
+			'email': [
+				['notEmpty'],
+				['pattern', 'email']
+			],
+			'name': [
+				['notEmpty'],
+				['pattern', 'name']
+			],
+			'message': [
+				['notEmpty'],
+				['pattern', 'message']
+			],
+		}
 	});
 
 	valid.init();
