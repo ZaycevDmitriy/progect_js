@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   countTimer('18:40 5 July 2021');
 
-  // Меню
+  // Menu
 
   const toggleMenu = () => {
     const btnMenu = document.querySelector('.menu'),
@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   togglePopUp();
 
-  // Табы
+  // Tabs
 
   const tabs = () => {
     const tabHeader = document.querySelector('.service-header'),
@@ -405,7 +405,7 @@ document.addEventListener('DOMContentLoaded', () => {
           target.value = target.value.trim();
           const correctPhone = target.value.match(/(\+?)([78])(-?\(?)*(\d{3})(\)?-?)([-])*(\d{3})([-])*(\d{2})([-])*(\d{2})/);
           if (correctPhone) {
-            target.value = `${correctPhone[1]}${correctPhone[2]}(${correctPhone[4]})-${correctPhone[7]}-${correctPhone[9]}-${correctPhone[11]}`;
+            target.value = `${correctPhone[1]}${correctPhone[2]}${correctPhone[4]}${correctPhone[7]}${correctPhone[9]}${correctPhone[11]}`;
           } else {
             target.value = '';
           }
@@ -414,6 +414,68 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
-  // validateFeedbackForm();
+  validateFeedbackForm();
+
+  // send-ajax-form
+
+  const sendForm = () => {
+    const errorMessage = 'Что-то пошло не так...',
+      loadMessage = 'Загрузка...',
+      successMessage = 'Спасибо! Мы скоро с вами свяжемся!';
+    const forms = document.querySelectorAll('form');
+    const statusMessage = document.createElement('div');
+    statusMessage.style.cssText = `font-size: 2rem; color: #19b5fe`;
+    
+    forms.forEach((form) => {
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const target = event.target;
+        if (target.matches('form')) {
+          target.append(statusMessage);
+          statusMessage.textContent = loadMessage;
+          const formData = new FormData(target);
+          let body = {};
+          formData.forEach((val, key) => {
+            body[key] = val;
+          });
+          postData(body,
+            () => {
+              statusMessage.textContent = successMessage;
+              [...target.elements].forEach((elem) => {
+                if (elem.tagName.toLowerCase() === 'input' || elem.tagName.toLowerCase() === 'textarea') {
+                  elem.value = '';
+                }
+              });
+            },
+            (error) => {
+              statusMessage.textContent = errorMessage;
+              console.error(error);
+            }
+          );
+        }
+      });
+    });
+
+    const postData = (body, outputData, errorData) => {
+      const request = new XMLHttpRequest();
+      request.addEventListener('readystatechange', () => {
+        if (request.readyState !== 4) {
+          return;
+        }
+        if (request.status === 200) {
+          outputData();
+        } else {
+          errorData(request.status);
+        }
+      });
+
+      request.open('POST', './server.php');
+      request.setRequestHeader('Content-Type', 'application/json');
+      request.send(JSON.stringify(body));
+    };
+    
+  };
+
+  sendForm();
 
 });
