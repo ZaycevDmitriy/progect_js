@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   countTimer('18:40 5 July 2021');
 
-  // Menu
+  // Меню
 
   const toggleMenu = () => {
     const btnMenu = document.querySelector('.menu'),
@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   togglePopUp();
 
-  // Tabs
+  // Табы
 
   const tabs = () => {
     const tabHeader = document.querySelector('.service-header'),
@@ -425,6 +425,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const forms = document.querySelectorAll('form');
     const statusMessage = document.createElement('div');
     statusMessage.style.cssText = `font-size: 2rem; color: #19b5fe`;
+
+    const postData = (body) => {
+      return new Promise((resolve, reject) => {
+        const request = new XMLHttpRequest();
+
+        request.addEventListener('readystatechange', () => {
+          if (request.readyState !== 4) {
+            return;
+          }
+          if (request.status === 200) {
+            resolve();
+          } else {
+            reject(request.status);
+          }
+        });
+
+        request.open('POST', './server.php');
+        request.setRequestHeader('Content-Type', 'application/json');
+        request.send(JSON.stringify(body));
+      });
+    };
     
     forms.forEach((form) => {
       form.addEventListener('submit', (event) => {
@@ -438,8 +459,8 @@ document.addEventListener('DOMContentLoaded', () => {
           formData.forEach((val, key) => {
             body[key] = val;
           });
-          postData(body,
-            () => {
+          postData(body)
+            .then(() => {
               statusMessage.textContent = successMessage;
               [...target.elements].forEach((elem) => {
                 if (elem.tagName.toLowerCase() === 'input' || elem.tagName.toLowerCase() === 'textarea') {
@@ -449,31 +470,11 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             (error) => {
               statusMessage.textContent = errorMessage;
-              console.error(error);
-            }
-          );
+              console.error(error)
+            });
         }
       });
     });
-
-    const postData = (body, outputData, errorData) => {
-      const request = new XMLHttpRequest();
-      request.addEventListener('readystatechange', () => {
-        if (request.readyState !== 4) {
-          return;
-        }
-        if (request.status === 200) {
-          outputData();
-        } else {
-          errorData(request.status);
-        }
-      });
-
-      request.open('POST', './server.php');
-      request.setRequestHeader('Content-Type', 'application/json');
-      request.send(JSON.stringify(body));
-    };
-    
   };
 
   sendForm();
