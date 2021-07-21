@@ -426,24 +426,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const statusMessage = document.createElement('div');
     statusMessage.style.cssText = `font-size: 2rem; color: #19b5fe`;
 
-    const postData = (body) => {
-      return new Promise((resolve, reject) => {
-        const request = new XMLHttpRequest();
-
-        request.addEventListener('readystatechange', () => {
-          if (request.readyState !== 4) {
-            return;
-          }
-          if (request.status === 200) {
-            resolve();
-          } else {
-            reject(request.status);
-          }
-        });
-
-        request.open('POST', './server.php');
-        request.setRequestHeader('Content-Type', 'application/json');
-        request.send(JSON.stringify(body));
+    const postData = (formData) => {
+      return fetch('./server.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+        body: formData,
       });
     };
     
@@ -455,20 +444,20 @@ document.addEventListener('DOMContentLoaded', () => {
           target.append(statusMessage);
           statusMessage.textContent = loadMessage;
           const formData = new FormData(target);
-          let body = {};
-          formData.forEach((val, key) => {
-            body[key] = val;
-          });
-          postData(body)
-            .then(() => {
+          postData(formData)
+            .then((response) => {
+              console.log(formData);
+              if (!response.ok) {
+                throw new Error('Status network not 200');
+              }
               statusMessage.textContent = successMessage;
               [...target.elements].forEach((elem) => {
                 if (elem.tagName.toLowerCase() === 'input' || elem.tagName.toLowerCase() === 'textarea') {
                   elem.value = '';
                 }
               });
-            },
-            (error) => {
+            })
+            .catch((error) => {
               statusMessage.textContent = errorMessage;
               console.error(error)
             });
