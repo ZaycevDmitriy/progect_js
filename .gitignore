@@ -144,7 +144,7 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/windows,webstorm,vscode
 06_layout-flexbox/.htmlhintrc
 
-/dist
+
 /package-lock.json
 node_modules/
 reports/
