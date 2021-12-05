@@ -9,9 +9,13 @@ import changeImage from "./modules/changeImage";
 import validateCalculated from "./modules/validateCalculated";
 import validateFeedbackForm from "./modules/validateFeedbackForm";
 import sendForm from "./modules/sendForm";
+import smoothScroll from "./modules/smoothScroll";
 
 // Таймер
-countTimer('18:40 5 July 2021');
+countTimer('20:00 7 Dec 2021');
+
+// Плавный скролл
+smoothScroll();
 
 // Menu
 toggleMenu();
